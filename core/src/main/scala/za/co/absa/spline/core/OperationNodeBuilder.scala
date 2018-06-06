@@ -338,8 +338,8 @@ private class CTASNodeBuilder(val operation: CreateDataSourceTableAsSelectComman
   override def build(): op.Operation = {
     op.Write(
       buildOperationProps(),
-      "hive",
-      operation.table.simpleString,
+      "Hive",
+      operation.table.identifier.identifier,
       append = operation.mode == SaveMode.Append
     )
   }
