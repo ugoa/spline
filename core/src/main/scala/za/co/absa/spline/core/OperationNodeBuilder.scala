@@ -336,8 +336,11 @@ private class CTASNodeBuilder(val operation: CreateDataSourceTableAsSelectComman
                              (implicit val metaDatasetFactory: MetaDatasetFactory) extends OperationNodeBuilder[CreateDataSourceTableAsSelectCommand] {
 
   override def build(): op.Operation = {
-    op.CTAS(
-      buildOperationProps()
+    op.Write(
+      buildOperationProps(),
+      "hive",
+      operation.table.simpleString,
+      append = operation.mode == SaveMode.Append
     )
   }
 }
