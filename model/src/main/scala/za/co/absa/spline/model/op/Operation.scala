@@ -73,7 +73,6 @@ object Operation {
       case op@Union(mp) => op.copy(mainProps = fn(mp))
       case op@Projection(mp, _) => op.copy(mainProps = fn(mp))
       case op@Composite(mp, _, _, _, _, _) => op.copy(mainProps = fn(mp))
-      case op@CTAS(mp) => op.copy(mainProps = fn(mp))
     }).asInstanceOf[T]
   }
 
@@ -266,5 +265,3 @@ case class Composite(
       s"Hence the size 'inputs' collection should be the same as the count of known datasets for 'sources' field. " +
       s"But was $inputDatasetsCount and $knownSourceLineagesCount respectively")
 }
-
-case class CTAS(mainProps: OperationProps) extends Operation
