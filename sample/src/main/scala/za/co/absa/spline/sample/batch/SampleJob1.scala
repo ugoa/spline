@@ -35,6 +35,9 @@ object SampleJob1 extends SparkApp("Sample Job 1") {
     .filter($"total_response_size" > 1000)
     .filter($"count_views" > 10)
 
+
+//  val sourceDS = spark.sql("select * from wikidata").as("source")
+
   val domainMappingDS = spark.read
     .option("header", "true")
     .option("inferSchema", "true")

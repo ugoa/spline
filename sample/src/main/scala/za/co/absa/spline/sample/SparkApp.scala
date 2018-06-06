@@ -35,6 +35,7 @@ abstract class SparkApp
 
   sparkBuilder.appName(name)
   sparkBuilder.master(master)
+  sparkBuilder.enableHiveSupport()
 
   for ((k, v) <- conf) sparkBuilder.config(k, v)
 
