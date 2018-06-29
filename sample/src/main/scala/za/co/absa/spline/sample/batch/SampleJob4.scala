@@ -19,25 +19,25 @@ package za.co.absa.spline.sample.batch
 import org.apache.spark.sql.SaveMode
 import za.co.absa.spline.core.SparkLineageInitializer._
 import za.co.absa.spline.sample.SparkApp
-import java.time.Instant
 
-object SampleJob1 extends SparkApp(s"Sample Job ${Instant.now.toString.replaceAll("[-:.]", "").toLowerCase}") {
+object SampleJob4 extends SparkApp(s"Sample Job 4") {
 
   // Initializing library to hook up to Apache Spark
   spark.enableLineageTracking()
 
   // A business logic of a spark job ...
 
-//  val sourceDS = spark.read
-//    .option("header", "true")
-//    .option("inferSchema", "true")
-//    .csv("data/input/batch/wikidata.csv")
-//    .as("source")
-//    .filter($"total_response_size" > 1000)
-//    .filter($"count_views" > 10)
+  val sourceDS = spark.read
+    .option("header", "true")
+    .option("inferSchema", "true")
+    .csv("data/input/batch/wikidata.csv")
+    .as("source")
+    .filter($"total_response_size" > 1000)
+    .filter($"count_views" > 10)
 
+  sourceDS.write.mode(SaveMode.Overwrite).saveAsTable("wikidata")
 
-  val sourceDS = spark.sql("select * from wikidata").as("source")
+  val hiveSourceDS = spark.sql("select * from wikidata").as("source")
 
   val domainMappingDS = spark.read
     .option("header", "true")
@@ -45,11 +45,9 @@ object SampleJob1 extends SparkApp(s"Sample Job ${Instant.now.toString.replaceAl
     .csv("data/input/batch/domain.csv")
     .as("mapping")
 
-  val joinedDS = sourceDS
+  val joinedDS = hiveSourceDS
     .join(domainMappingDS, $"domain_code" === $"d_code", "left_outer")
     .select($"page_title".as("page"), $"d_name".as("domain"), $"count_views")
 
-  joinedDS.write.mode(SaveMode.Overwrite).parquet("data/results/batch/job1_results")
-
-//  joinedDS.write.mode(SaveMode.Append).saveAsTable(s"spline_dw_local_debugging")
+  joinedDS.write.mode(SaveMode.Overwrite).saveAsTable(s"job4_results")
 }
